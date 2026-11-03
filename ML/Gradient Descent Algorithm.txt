@@ -1,0 +1,47 @@
+Gradient Descent Algorithm
+
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+
+
+
+def f(x):
+    return (x + 3) ** 2
+
+def df(x):
+    return 2 * (x + 3)
+
+
+
+
+x = 2
+learning_rate = 0.1
+iterations = 50
+
+for i in range(iterations):
+    gradient = df(x)
+    x = x - learning_rate * gradient
+
+print("Minimum value of x:", round(x, 6))
+print("Minimum value of y:", f(x))
+
+
+
+
+
+
+x_values = np.linspace(-6, 5, 100)
+
+plt.plot(x_values, f(x_values), label="y = (x+3)^2")
+plt.scatter(2, f(2), color="green", label="Starting point")
+plt.scatter(x, f(x), color="red", label="Minimum point")
+
+plt.xlabel("x")
+plt.ylabel("y")
+plt.title("Gradient Descent")
+plt.legend()
+plt.grid()
+plt.show()

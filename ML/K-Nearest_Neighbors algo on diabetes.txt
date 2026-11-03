@@ -1,0 +1,135 @@
+K-Nearest_Neighbors algo on diabetes
+
+!pip install pandas numpy matplotlib seaborn scikit-learn
+
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import accuracy_score, precision_score, recall_score
+
+
+# 2. Load the dataset
+
+df = pd.read_csv(r"C:\Users\Yash Hogade\Downloads\archive (4)\diabetes.csv")
+
+print("First 5 rows of dataset:")
+print(df.head())
+
+print("\nDataset Shape:")
+print(df.shape)
+
+
+# 3. Data preprocessing
+
+# Remove duplicate records
+df = df.drop_duplicates()
+
+# Replace zero values with NaN in selected columns
+columns = ["Glucose", "BloodPressure",
+           "SkinThickness", "Insulin", "BMI"]
+
+for col in columns:
+    df[col] = df[col].replace(0, np.nan)
+
+# Fill missing values with median
+for col in columns:
+    df[col] = df[col].fillna(df[col].median())
+
+print("\nMissing values:")
+print(df.isnull().sum())
+
+
+# 4. Separate input and output
+
+X = df.drop("Outcome", axis=1)
+y = df["Outcome"]
+
+
+# 5. Split dataset into training and testing data
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y,
+    test_size=0.2,
+    random_state=42,
+    stratify=y
+)
+
+
+# 6. Feature scaling
+
+scaler = StandardScaler()
+
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
+
+# 7. Apply KNN algorithm
+
+knn = KNeighborsClassifier(n_neighbors=5)
+
+# Train the model
+knn.fit(X_train, y_train)
+
+# Predict the results
+y_pred = knn.predict(X_test)
+
+print("\nPredicted Values:")
+print(y_pred)
+
+
+# 8. Calculate confusion matrix
+
+cm = confusion_matrix(y_test, y_pred)
+
+print("\nConfusion Matrix:")
+print(cm)
+
+
+# 9. Display confusion matrix using heatmap
+
+plt.figure(figsize=(6, 4))
+
+sns.heatmap(
+    cm,
+    annot=True,
+    fmt="d",
+    cmap="Blues",
+    xticklabels=["No Diabetes", "Diabetes"],
+    yticklabels=["No Diabetes", "Diabetes"]
+)
+
+plt.xlabel("Predicted Values")
+plt.ylabel("Actual Values")
+plt.title("KNN Confusion Matrix")
+plt.show()
+
+
+# 10. Calculate performance metrics
+
+accuracy = accuracy_score(y_test, y_pred)
+
+error_rate = 1 - accuracy
+
+precision = precision_score(y_test, y_pred, zero_division=0)
+
+recall = recall_score(y_test, y_pred, zero_division=0)
+
+
+# 11. Display final results
+
+print("\n------ KNN MODEL PERFORMANCE ------")
+
+print("Accuracy:", round(accuracy * 100, 2), "%")
+
+print("Error Rate:", round(error_rate * 100, 2), "%")
+
+print("Precision:", round(precision * 100, 2), "%")
+
+print("Recall:", round(recall * 100, 2), "%")
