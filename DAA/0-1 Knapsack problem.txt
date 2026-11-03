@@ -1,0 +1,44 @@
+Write a program to solve a 0-1 Knapsack problem using dynamic programming or branch and bound strategy.
+
+
+#include <iostream>
+using namespace std;
+
+int main() {
+    int n, capacity;
+
+    cout << "Enter number of items: ";
+    cin >> n;
+
+    int weight[100], profit[100];
+    int dp[101][1001] = {0};
+
+    cout << "Enter weight and profit of each item:\n";
+
+    for (int i = 0; i < n; i++) {
+        cin >> weight[i] >> profit[i];
+    }
+
+    cout << "Enter knapsack capacity: ";
+    cin >> capacity;
+
+    // Dynamic Programming
+    for (int i = 1; i <= n; i++) {
+        for (int j = 0; j <= capacity; j++) {
+
+            if (weight[i - 1] <= j) {
+                dp[i][j] = max(
+                    profit[i - 1] + dp[i - 1][j - weight[i - 1]],
+                    dp[i - 1][j]
+                );
+            }
+            else {
+                dp[i][j] = dp[i - 1][j];
+            }
+        }
+    }
+
+    cout << "\nMaximum Profit = " << dp[n][capacity];
+
+    return 0;
+}

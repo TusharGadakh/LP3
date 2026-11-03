@@ -1,0 +1,43 @@
+Write a program to generate binomial coefficients using dynamic programming.
+
+
+#include <iostream>
+using namespace std;
+
+int main() {
+    int n, r;
+    int dp[21][21] = {0};
+
+    cout << "Enter value of n: ";
+    cin >> n;
+
+    cout << "Enter value of r: ";
+    cin >> r;
+
+    if (n < 0 || n > 20 || r < 0 || r > n) {
+        cout << "Invalid input";
+        return 0;
+    }
+
+    // Generate binomial coefficients
+    for (int i = 0; i <= n; i++) {
+
+        dp[i][0] = 1;
+        dp[i][i] = 1;
+
+        for (int j = 1; j < i; j++) {
+            dp[i][j] = dp[i-1][j-1] + dp[i-1][j];
+        }
+    }
+
+    cout << "\nBinomial Coefficients:\n";
+
+    for (int j = 0; j <= n; j++) {
+        cout << dp[n][j] << " ";
+    }
+
+    cout << "\n\nC(" << n << "," << r << ") = "
+         << dp[n][r];
+
+    return 0;
+}

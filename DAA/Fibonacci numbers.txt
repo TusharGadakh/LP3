@@ -1,0 +1,49 @@
+1. Write a program non-recursive and recursive program to calculate Fibonacci numbers and analyze their time and space complexity.
+
+
+#include <iostream>
+using namespace std;
+
+// Non-recursive method
+int fibonacci(int n) {
+    int a = 0, b = 1, c;
+
+    if (n == 0)
+        return 0;
+
+    for (int i = 2; i <= n; i++) {
+        c = a + b;
+        a = b;
+        b = c;
+    }
+
+    return b;
+}
+
+// Recursive method
+int fib(int n) {
+    if (n <= 1)
+        return n;
+
+    return fib(n - 1) + fib(n - 2);
+}
+
+int main() {
+    int n;
+
+    cout << "Enter a number: ";
+    cin >> n;
+
+    if (n < 0 || n > 46) {
+        cout << "Enter number between 0 and 46.";
+        return 0;
+    }
+
+    cout << "\nNon-Recursive Fibonacci: "
+         << fibonacci(n);
+
+    cout << "\nRecursive Fibonacci: "
+         << fib(n);
+
+    return 0;
+}

@@ -1,0 +1,85 @@
+2. Write a program to implement Huffman Encoding using a greedy strategy
+
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+struct Node {
+    char ch;
+    int freq;
+    int left, right, parent;
+};
+
+Node h[200];
+
+// Function to print Huffman Codes
+void printCodes(int root, string code) {
+    if (h[root].left == -1 && h[root].right == -1) {
+        cout << h[root].ch << " : ";
+
+        if (code == "")
+            cout << "0";
+        else
+            cout << code;
+
+        cout << endl;
+        return;
+    }
+
+    printCodes(h[root].left, code + "0");
+    printCodes(h[root].right, code + "1");
+}
+
+int main() {
+    int n;
+
+    cout << "Enter number of characters: ";
+    cin >> n;
+
+    if (n <= 0 || n > 100) {
+        cout << "Invalid input";
+        return 0;
+    }
+
+    cout << "Enter character and frequency:\n";
+
+    for (int i = 0; i < n; i++) {
+        cin >> h[i].ch >> h[i].freq;
+
+        h[i].left = -1;
+        h[i].right = -1;
+        h[i].parent = -1;
+    }
+
+    // Greedy approach
+    for (int i = n; i < 2 * n - 1; i++) {
+        int m1 = -1, m2 = -1;
+
+        for (int j = 0; j < i; j++) {
+            if (h[j].parent == -1) {
+                if (m1 == -1 || h[j].freq < h[m1].freq) {
+                    m2 = m1;
+                    m1 = j;
+                }
+                else if (m2 == -1 || h[j].freq < h[m2].freq) {
+                    m2 = j;
+                }
+            }
+        }
+
+        h[i].freq = h[m1].freq + h[m2].freq;
+        h[i].left = m1;
+        h[i].right = m2;
+        h[i].parent = -1;
+
+        h[m1].parent = i;
+        h[m2].parent = i;
+    }
+
+    cout << "\nHuffman Codes:\n";
+
+    printCodes(2 * n - 2, "");
+
+    return 0;
+}
